@@ -3,6 +3,35 @@ import { css, unsafeCSS } from 'lit-element';
 import * as foundations from '@bbva-web-components/bbva-foundations-styles';
 
 export default css`
+ul,
+ol,
+li,
+figure,
+p,
+h1,
+h2,
+h3 {
+  margin: 0;
+  padding: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
 [slot=app-main-content] {
   height: 100%;
 }
@@ -13,35 +42,24 @@ export default css`
   height: inherit;
 }
 
-.main-inputs {
-  margin: auto 0;
-}
-.main-inputs .input {
-  margin-bottom: 1rem;
-}
-
-.input-link {
-  display: block;
-  text-align: right;
-}
-
-.main-buttons {
+.list-cards {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.main-buttons .input {
-  margin-bottom: 1rem;
-  min-width: 13rem;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 3rem;
 }
 
-.title {
-  display: flex;
-  color: var(--bbva-600, #000000);
-  line-height: 1.2;
-  font-weight: var(--font-weight--medium, 500);
-  font-size: var(--cells-text-size-xl, 1.125rem);
-  text-align: center;
+.card-container {
+  padding: 30px;
 }
 
+.poke-card-ui {
+  flex: 1 1 20%;
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+poke-card-ui {
+  box-sizing: border-box;
+}
 `;

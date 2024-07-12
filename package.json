@@ -30,6 +30,7 @@
     "@bbva-web-components/bbva-web-form-text": "^1.1.0",
     "@bbva-web-components/bbva-web-link": "^1.6.1",
     "@cells-components/pokeapi-dm": "git+https://github.com/NIHIKO/pokeapi-dm.git",
+    "@cells-components/poke-card-ui": "git+https://github.com/NIHIKO/poke-card-ui.git",
     "@cells-demo/demo-app-container": "^1.0.0",
     "@cells-demo/demo-app-template": "^1.0.0",
     "@cells-demo/demo-data-dm": "^1.0.0",

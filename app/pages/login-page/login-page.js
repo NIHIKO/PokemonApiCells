@@ -8,15 +8,11 @@ import { bbvaWebLinkAmbient } from '@bbva-web-components/bbva-web-link';
 
 import '@bbva-experience-components/bbva-form-select/bbva-form-select.js';
 import '@cells-components/pokeapi-dm/pokeapi-dm.js';
-
-import '@bbva-web-components/bbva-header-main/bbva-header-main.js';
+import '@cells-components/poke-card-ui/poke-card-ui.js';
 import '@bbva-web-components/bbva-web-button-default/bbva-web-button-default.js';
-import '@bbva-web-components/bbva-web-form-text/bbva-web-form-text.js';
-import '@bbva-web-components/bbva-web-form-password/bbva-web-form-password.js';
-import '@bbva-web-components/bbva-web-link/bbva-web-link.js';
 import '@bbva-web-components/bbva-foundations-grid-default-layout/bbva-foundations-grid-default-layout.js';
 import '@cells-demo/demo-app-template/demo-app-template.js';
-import '@cells-demo/demo-data-dm/demo-data-dm.js';
+
 
 import styles from './login-page-styles.js';
 
@@ -55,10 +51,12 @@ class LoginMobilePage extends intl(CellsPage) {
         attribute: false,
       },
       listPokemon: {
-        type: Array
-      }
+        type: Array,
+      },
+      control: {
+        type: Boolean,
+      },
     };
-
   }
 
   static get styles() {
@@ -80,13 +78,14 @@ class LoginMobilePage extends intl(CellsPage) {
         composed: true,
       })
     );
+    this.listPokemon = [];
+    this.control = true;
   }
 
   update(props) {
     if (props.has('i18nKeys')) {
       this._i18nKeys = { ...DEFAULT_I18N_KEYS, ...this.i18nKeys };
     }
-
     return super.update && super.update(props);
   }
 
@@ -105,18 +104,6 @@ class LoginMobilePage extends intl(CellsPage) {
     this.navigate('help');
   }
 
-  get _headerTpl() {
-    return html`
-      <bbva-header-main
-        slot="app-header"
-        variant="transparent"
-        .iconRightPrimary="${menuHelp}"
-        accessibility-text-icon-right-primary="${this.t(this.i18nKeys.help)}"
-        image="https://movil.bbva.es/apps/woody/assets/vendor/res/img/logos/logo-white-1c1c2a68cc4c755b9ebacef725dd3421.svg"
-      ></bbva-header-main>
-    `;
-  }
-
   get _title() {
     return html`
       <div class="neutral-primary" slot="app-main-content">
@@ -125,79 +112,77 @@ class LoginMobilePage extends intl(CellsPage) {
         <bbva-form-select
           label="Seleccione el tipo Pokémon"
           selector-aria-label="primary select"
-          selector-completed-aria-label="culminated selector">
+          selector-completed-aria-label="culminated selector"
+        >
           <bbva-form-option value="option1" selected>Option 1</bbva-form-option>
           <bbva-form-option value="option2">Option 2</bbva-form-option>
           <bbva-form-option value="option3">Option 3</bbva-form-option>
         </bbva-form-select>
+        <br />
+        <div class="list-cards">
+          <div class="card-container">
+            <poke-card-ui></poke-card-ui>
+          </div>
+          <div class="card-container">
+            <poke-card-ui></poke-card-ui>
+          </div>
+          <div class="card-container">
+            <poke-card-ui></poke-card-ui>
+          </div>
+          <div class="card-container">
+            <poke-card-ui></poke-card-ui>
+          </div>
+          <div class="card-container">
+            <poke-card-ui></poke-card-ui>
+          </div>
+        </div>
       </div>
     `;
   }
 
-  get _mainContentTpl() {
-    return html`
-      <div class="neutral-primary" slot="app-main-content">
-        <form
-          id="loginForm"
-          action="#"
-          method="post"
-          target="_blank"
-          class="content"
-        >
-          <div class="main-inputs" ambient="dark300">
-            <bbva-web-form-text
-              id="user"
-              class="input"
-              required=""
-              label="${this.t(this.i18nKeys.userInputLabel)}"
-            ></bbva-web-form-text>
-            <bbva-web-form-password
-              id="password"
-              class="input"
-              label="${this.t(this.i18nKeys.userPasswordLabel)}"
-              name="customField"
-              required=""
-            ></bbva-web-form-password>
-            <bbva-web-link
-              class="input-link"
-              href="https://www.bbva.es"
-              target="_blank"
-              >${this.t(this.i18nKeys.forgetPassword)}</bbva-web-link
-            >
-          </div>
-
-          <div class="main-buttons" ambient="dark300">
-            <bbva-web-button-default
-              class="input"
-              disabled
-              variant="positive"
-              type="submit"
-              >${this.t(this.i18nKeys.button)}</bbva-web-button-default
-            >
-            <bbva-web-button-default id="submit" class="input" type="submit"
-              >${this.t(this.i18nKeys.clientButton)}</bbva-web-button-default
-            >
-          </div>
-        </form>
-
-        <demo-data-dm @settings="${this._getUserSettings}"></demo-data-dm>
-      </div>
-    `;
-  }
 
   render() {
     return html` <pokeapi-dm id="pokemonApi"></pokeapi-dm>
       <demo-app-template page-title="${this.t(this.i18nKeys.loginTitle)}">
-        ${this._title} ${this._headerTpl} ${this._mainContentTpl}
+        <poke-card-ui></poke-card-ui>
+        ${this._title}
       </demo-app-template>`;
   }
 
   getPokemonList() {
+    console.log('entramos perra');
+    const pokemons = [];
+    if (this.control) {
+      this.control = false;
+      const pokemonApi = this.shadowRoot.querySelector('#pokemonApi');
+      pokemonApi.getPokemonData();
+      pokemonApi.addEventListener('get-pokemon-success', (ev) => {
+        console.log('lalala => s', ev.detail.results);
+        this.listPokemon = ev.detail.results;
+        this.listPokemon.map((element) => {
+          pokemons.push(element.name);
+        });
+        pokemons.map((element) => {
+          this.getPokemonDetails(element);
+        });
+        this.control = true;
+      });
+    }
+  }
+
+  getPokemonDetails(namePokemon) {
+    const detailsPokemon = [];
+    console.log(namePokemon);
     const pokemonApi = this.shadowRoot.querySelector('#pokemonApi');
-    pokemonApi.getPokemonData();
-    pokemonApi.addEventListener('get-pokemon-success', (ev) => {
-      console.log(ev.detail.results);
-      this.listPokemon = ev.detail;
+    let lala = 0;
+    pokemonApi.path = namePokemon;
+    pokemonApi.getPokemonInfo();
+    pokemonApi.addEventListener('get-pokemon-info-success', (ev) => {
+      lala = lala + 1;
+      console.log(lala);
+      console.log(ev);
+      detailsPokemon.push(ev.detail);
+      console.log(detailsPokemon);
     });
   }
 }
