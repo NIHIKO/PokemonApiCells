@@ -1,0 +1,48 @@
+{
+  "name": "PokemonApiCells",
+  "version": "0.1.0",
+  "keywords": [
+    "cells-app"
+  ],
+  "scripts": {
+    "build:vulcanize": "cells app:build -c dev.js -b vulcanize",
+    "build:novulcanize": "cells app:build -c dev.js -b novulcanize",
+    "build:pro:vulcanize": "cells app:build -c pro.js -b vulcanize",
+    "build:pro:novulcanize": "cells app:build -c pro.js -b novulcanize",
+    "clean": "npm run clean:caches && npm run clean:deps",
+    "clean:caches": "bower cache clean && npm cache clean --force",
+    "clean:deps": "rm -rf components && rm -rf node_modules && rm -rf package-lock.json && rm -rf build && rm -rf dist",
+    "start": "cells app:serve -c dev.js",
+    "start:firebase": "cells app:serve -c firebase.js -b develop",
+    "start:qa": "cells app:serve -c qa.js",
+    "develop": "cells app:serve -c dev.js -b develop",
+    "rebuild": "npm run clean && npm run reinstall",
+    "reinstall": "npm i && bower i -F"
+  },
+  "dependencies": {
+    "@bbva-experience-components/bbva-form-select": "^1.7.2",
+    "@bbva-web-components/bbva-core-intl-mixin": "^1.5.4",
+    "@bbva-web-components/bbva-foundations-grid-default-layout": "^1.0.1",
+    "@bbva-web-components/bbva-foundations-icons": "^1.16.0",
+    "@bbva-web-components/bbva-header-main": "^7.8.9",
+    "@bbva-web-components/bbva-web-button-default": "^1.5.0",
+    "@bbva-web-components/bbva-web-form-password": "^1.2.0",
+    "@bbva-web-components/bbva-web-form-text": "^1.1.0",
+    "@bbva-web-components/bbva-web-link": "^1.6.1",
+    "@cells-components/pokeapi-dm": "git+https://github.com/NIHIKO/pokeapi-dm.git",
+    "@cells-demo/demo-app-container": "^1.0.0",
+    "@cells-demo/demo-app-template": "^1.0.0",
+    "@cells-demo/demo-data-dm": "^1.0.0",
+    "@cells-demo/demo-web-template": "^1.1.0",
+    "@cells/cells-bridge": "^3.19.2",
+    "@cells/cells-element": "^1.5.0",
+    "@cells/cells-page": "^1.5.0",
+    "@webcomponents/webcomponentsjs": "^2.7.0",
+    "cells-app-template": "^6.0.0",
+    "lit-element": "^2.0.0"
+  },
+  "devDependencies": {
+    "@cells/cells-component-core": "^3.2.0"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}
