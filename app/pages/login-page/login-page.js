@@ -56,6 +56,7 @@ class LoginMobilePage extends intl(CellsPage) {
       control: {
         type: Boolean,
       },
+      detailsPokemon: { type: Array }
     };
   }
 
@@ -80,6 +81,7 @@ class LoginMobilePage extends intl(CellsPage) {
     );
     this.listPokemon = [];
     this.control = true;
+    this.detailsPokemon = [];
   }
 
   update(props) {
@@ -120,21 +122,18 @@ class LoginMobilePage extends intl(CellsPage) {
         </bbva-form-select>
         <br />
         <div class="list-cards">
+          ${this.detailsPokemon.map(element => html`
           <div class="card-container">
-            <poke-card-ui></poke-card-ui>
+            <poke-card-ui
+              name=${element.name}
+              urlImg=${element.urlImg}
+              pokemonAttack=${element.pokemonAttack}
+              pokemonDefense=${element.pokemonDefense}
+              pokemonType=${element.pokemonType}
+              pokemonSpeed=${element.pokemonSpeed}
+            ></poke-card-ui>
           </div>
-          <div class="card-container">
-            <poke-card-ui></poke-card-ui>
-          </div>
-          <div class="card-container">
-            <poke-card-ui></poke-card-ui>
-          </div>
-          <div class="card-container">
-            <poke-card-ui></poke-card-ui>
-          </div>
-          <div class="card-container">
-            <poke-card-ui></poke-card-ui>
-          </div>
+        `)}
         </div>
       </div>
     `;
@@ -144,7 +143,6 @@ class LoginMobilePage extends intl(CellsPage) {
   render() {
     return html` <pokeapi-dm id="pokemonApi"></pokeapi-dm>
       <demo-app-template page-title="${this.t(this.i18nKeys.loginTitle)}">
-        <poke-card-ui></poke-card-ui>
         ${this._title}
       </demo-app-template>`;
   }
@@ -165,24 +163,38 @@ class LoginMobilePage extends intl(CellsPage) {
         pokemons.map((element) => {
           this.getPokemonDetails(element);
         });
+        console.log(this.detailsPokemon);
         this.control = true;
       });
     }
   }
 
-  getPokemonDetails(namePokemon) {
-    const detailsPokemon = [];
+  pause() {
+    return new Promise(resolve => setTimeout(resolve, 2000));
+  }
+
+  async getPokemonDetails(namePokemon) {
+    await this.pause();
     console.log(namePokemon);
     const pokemonApi = this.shadowRoot.querySelector('#pokemonApi');
-    let lala = 0;
-    pokemonApi.path = namePokemon;
-    pokemonApi.getPokemonInfo();
+    pokemonApi.getPokemonInfo(namePokemon);
     pokemonApi.addEventListener('get-pokemon-info-success', (ev) => {
-      lala = lala + 1;
-      console.log(lala);
-      console.log(ev);
-      detailsPokemon.push(ev.detail);
-      console.log(detailsPokemon);
+      const newPokemon = ev.detail;
+      const existingPokemon = this.detailsPokemon.find(
+        (pokemon) => pokemon.id === newPokemon.id
+      );
+      if (!existingPokemon) {
+        const pokemonSave = {
+          id: newPokemon.id,
+          name: newPokemon.name,
+          urlImg: newPokemon.sprites.front_default,
+          pokemonAttack: newPokemon.stats[1].base_stat,
+          pokemonDefense: newPokemon.stats[2].base_stat,
+          pokemonType: newPokemon.types[0].type.name,
+          pokemonSpeed: newPokemon.stats[5].base_stat,
+        };
+        this.detailsPokemon = [...this.detailsPokemon, pokemonSave];
+      }
     });
   }
 }
